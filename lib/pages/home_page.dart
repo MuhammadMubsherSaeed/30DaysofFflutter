@@ -1,18 +1,25 @@
+import 'package:first_app/models/product.dart';
 import 'package:first_app/widgets/drawer.dart';
+import 'package:first_app/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final int days = 30;
-    final String name = "Mubsher";
+    final dummyList = List.generate(50, (index) => ProductModel.products[0]);
     return Scaffold(
       appBar: AppBar(
         title: Text("Plans Cafe"),
       ),
-      body: Center(
-        child: Container(
-          child: Text("Welcome to $days days of flutter by $name"),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          itemCount: dummyList.length,
+          itemBuilder: (context, index) {
+            return ProductWidget(
+              item: dummyList[index],
+            );
+          },
         ),
       ),
       drawer: MyDrawer(),

@@ -1,5 +1,18 @@
+class ProductModel {
+  static final products = [
+    Item(
+        id: 001,
+        name: "Plants",
+        desc: "ABC",
+        price: 999,
+        color: "#33505a",
+        image:
+            "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F608990c4bcf2c7b4802c9725%2FIndoor-plants%2F960x0.jpg%3Ffit%3Dscale")
+  ];
+}
+
 class Item {
-  final String id;
+  final int id;
   final String name;
   final String desc;
   final num price;
@@ -14,14 +27,3 @@ class Item {
       required this.color,
       required this.image});
 }
-
-final products = [
-  Item(
-      id: "FYP001",
-      name: "Plants",
-      desc: "ABC",
-      price: 999,
-      color: "#33505a",
-      image:
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwatchandlearn.scholastic.com%2Fvideos%2Fanimals-and-plants%2Fplants%2Fwhat-are-plants.html&psig=AOvVaw2mxgchgy6hAAogMSAu_dU6&ust=1630261031875000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCKDYqe-p1PICFQAAAAAdAAAAABAD")
-];
