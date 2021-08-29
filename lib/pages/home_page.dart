@@ -2,8 +2,29 @@ import 'package:first_app/models/product.dart';
 import 'package:first_app/widgets/drawer.dart';
 import 'package:first_app/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    final catalogJson =
+        await rootBundle.loadString("assets/files/catalog.json");
+    final decodedData = jsonDecode(catalogJson);
+    var productsData = decodedData["products"];
+    print(productsData);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dummyList = List.generate(50, (index) => ProductModel.products[0]);
