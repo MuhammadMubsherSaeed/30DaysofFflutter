@@ -1,6 +1,7 @@
+import 'dart:ui';
+
 import 'package:first_app/models/product.dart';
 import 'package:first_app/widgets/drawer.dart';
-import 'package:first_app/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -37,17 +38,38 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child:(ProductModel.items!=null && ProductModel.items.isNotEmpty)? ListView.builder(
-          itemCount: ProductModel.items.length,
-          itemBuilder: (context, index) =>
-             ProductWidget(
-              item: ProductModel.items[index],
-            )
-          ,
-        ):Center(
-          child: 
-          CircularProgressIndicator(),
-          ),
+        child: (ProductModel.items != null && ProductModel.items.isNotEmpty)
+            ? GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemBuilder: (context, index) {
+                  final item = ProductModel.items[index];
+                  return Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: GridTile(
+                        header: Container(
+                          child: Text(
+                            item.name,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          padding: const EdgeInsets.all(12),
+                          decoration:
+                              BoxDecoration(color: Colors.green.shade500),
+                        ),
+                        child: Image.network(item.image),
+                        footer: Text(item.price.toString()),
+                      ));
+                },
+                itemCount: ProductModel.items.length,
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
       drawer: MyDrawer(),
     );
