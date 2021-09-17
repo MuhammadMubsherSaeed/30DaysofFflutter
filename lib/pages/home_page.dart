@@ -1,10 +1,12 @@
-import 'dart:ui';
+import 'dart:convert';
 
-import 'package:first_app/models/product.dart';
-import 'package:first_app/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:convert';
+// ignore: import_of_legacy_library_into_null_safe
+import "package:velocity_x/velocity_x.dart";
+
+import 'package:first_app/models/product.dart';
+import 'package:first_app/widgets/themes.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -33,45 +35,113 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Plans Cafe"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: (ProductModel.items != null && ProductModel.items.isNotEmpty)
-            ? GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemBuilder: (context, index) {
-                  final item = ProductModel.items[index];
-                  return Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: GridTile(
-                        header: Container(
-                          child: Text(
-                            item.name,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          padding: const EdgeInsets.all(12),
-                          decoration:
-                              BoxDecoration(color: Colors.green.shade500),
-                        ),
-                        child: Image.network(item.image),
-                        footer: Text(item.price.toString()),
-                      ));
-                },
-                itemCount: ProductModel.items.length,
-              )
-            : Center(
+        body: SafeArea(
+      child: Container(
+        padding: Vx.m32,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProductHeader(),
+            if (ProductModel.items != null && ProductModel.items.isNotEmpty)
+              ProductList().expand()
+            else
+              Center(
                 child: CircularProgressIndicator(),
-              ),
+              )
+          ],
+        ),
       ),
-      drawer: MyDrawer(),
+    ));
+  }
+}
+
+class ProductHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        "Plants Cafe".text.xl3.bold.color(MyTheme.darkBluishColor).make(),
+        "Trending Products".text.xl2.make(),
+      ],
     );
+  }
+}
+
+class ProductList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: ProductModel.items.length,
+      itemBuilder: (context, index) {
+        final product = ProductModel.items[index];
+        return ProductItem(
+          product: product,
+        );
+      },
+    );
+  }
+}
+
+class ProductItem extends StatelessWidget {
+  final Item product;
+
+  // ignore: unnecessary_null_comparison
+  const ProductItem({Key? key, required this.product})
+      : assert(product != null),
+        super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return VxBox(
+        child: Row(
+      children: [
+        ProductImaage(
+          image: product.image,
+        ),
+        Expanded(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            product.name.text.lg.color(MyTheme.darkblue).bold.make(),
+            product.desc.text.textStyle(context.captionStyle).make(),
+            10.heightBox,
+            ButtonBar(
+              alignment: MainAxisAlignment.spaceBetween,
+              buttonPadding: EdgeInsets.zero,
+              children: [
+                "\$${product.price}".text.bold.xl.make(),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyTheme.darkblue),
+                      shape: MaterialStateProperty.all(StadiumBorder())),
+                  child: "Buy".text.make(),
+                )
+              ],
+            ).pOnly(right: 8.0)
+          ],
+        ))
+      ],
+    )).white.roundedLg.square(150).make().py16();
+  }
+}
+
+class ProductImaage extends StatelessWidget {
+  final String image;
+
+  const ProductImaage({Key? key, required this.image}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(image)
+        .box
+        .rounded
+        .p8
+        .color(MyTheme.creamcolor)
+        .make()
+        .p16()
+        .w40(context);
   }
 }
